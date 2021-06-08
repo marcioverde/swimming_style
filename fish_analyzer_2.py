@@ -8,7 +8,6 @@ import natsort
 import os
 import subprocess
 import seaborn as sns
-import matplotlib.cm as cm  
 sns.set(color_codes=True)
 import matplotlib
 matplotlib.use('agg')
@@ -55,7 +54,7 @@ class MainWindow(QMainWindow):
         
     def start_app(self):
 
-        self.setFixedSize(660,460)
+        self.setFixedSize(660,400)
         self.move(350, 50)
         self.start_x = 0
         self.start_y = 0
@@ -82,8 +81,7 @@ class MainWindow(QMainWindow):
 
 
         self.first_array_interaction = 0
-        self.chunk_anterior = 0
-
+        self.chunk_anterior = 0 
 
         self.csv_saved = 0
 
@@ -133,7 +131,7 @@ class MainWindow(QMainWindow):
         self.layout = QVBoxLayout()
 
         self.label = QLabel(self)        
-        self.pixmap = QPixmap('happyfish.png')
+        self.pixmap = QPixmap('happyfish2.png')
         self.pixmap = self.pixmap.scaledToWidth(640)
         self.label.setPixmap(self.pixmap)
         self.layout.addWidget(self.label)
@@ -635,17 +633,13 @@ class MainWindow(QMainWindow):
                 model_regression.fit(x, y)
                 model_regression = LinearRegression().fit(x, y)
                 x1 = np.array([matrix_tai_x_max]).reshape((-1, 1))
-                y_pred_final_tail = model_regression.predict(x1)[0]
+                y_pred_final_tail = model_regression.predict(x1)
 
                 painter = QPainter(self.pixmap)
                 pen = QPen()
                 pen.setWidth(2)
                 pen.setColor(QColor('orange'))
                 painter.setPen(pen)
-                print(point1xmin)
-                print(y1)
-                print(point2xmax)
-                print(y_pred_final_tail)
                 painter.drawLine(point1xmin, y1,point2xmax, y_pred_final_tail)
 
                 pen.setWidth(2)
@@ -900,7 +894,7 @@ class MainWindow(QMainWindow):
          self.slider_time.setMaximum(self.frame_count)
       
          
-         self.setFixedSize(660,600)   #486
+         self.setFixedSize(660,525)   #486
          #self.frames(fname) 
     
     def show_frame_choosen(self):
@@ -1155,36 +1149,6 @@ class MainWindow(QMainWindow):
         self.button_select.clicked.connect(self.crop_study_area)             
         self.button_select.hide()
 
-
-        self.study_size = QLabel(self)
-        self.study_size.setText('Width [cm] of study area:')
-        self.study_size.setToolTip('Insert the width in centimeters of study size. Left blank or type 0 if not known')
-        self.study_size.hide()
-        self.study_size_insert = QLineEdit(self)
-
-        reg_ex = QRegExp("^[0-9]*(?:\.[0-9]*)?$")
-        input_validator = QRegExpValidator(reg_ex, self.study_size_insert)
-        self.study_size_insert.setValidator(input_validator)
-        
-        
-
-
-        
-        #self.study_size_insert.setText('0.0')      
-
-        #self.study_size_insert.setValidator(QIntValidator()) #Settings can only input data of type int
-        #self.study_size_insert.setValidator(QDoubleValidator()) #Settings can only input data of type double
-        #self.how_many_edit.setFixedWidth(120)
-        self.study_size_insert.hide()
-
-
-
-
-
-
-
-
-
         self.button_select_back = QPushButton('Select Fish', self)
         self.button_select_back.setToolTip('Select the fish so we can know its aproximate size') 
         self.button_select_back.setStyleSheet("border :1px solid green")        
@@ -1282,10 +1246,6 @@ class MainWindow(QMainWindow):
 
         self.layout_h3.addWidget(self.button_select)         
         self.layout_h3.addWidget(self.button_select_back)
-        self.layout_h3.addWidget(self.study_size)
-        self.layout_h3.addWidget(self.study_size_insert)
-        
-        
         
         
         self.layout_reports.addWidget(self.button_save)
@@ -1481,8 +1441,6 @@ class MainWindow(QMainWindow):
              
             self.button_select_back.show()
             self.button_select.show()
-            self.study_size.show()
-            self.study_size_insert.show()
 
 
             #print('compose_pictures')
@@ -1521,7 +1479,7 @@ class MainWindow(QMainWindow):
             #self.pixmap = self.pixmap.scaledToWidth(640)
             self.label.setPixmap(self.pixmap)
            
-            self.setFixedSize(660,634)   #534
+            self.setFixedSize(660,574)   #534
         
         elif self.step == 1:
             self.set_mask()
@@ -1661,7 +1619,7 @@ class MainWindow(QMainWindow):
                 list_index_mass_X = []
                 list_index_mass_Y = []
                 n_init = 0
-                
+
                 #print(c_index)
                 #print(cont_size_filtered)
                 
@@ -1683,8 +1641,7 @@ class MainWindow(QMainWindow):
                     #list_similarity.append(similarity)
                     list_area.append(area)                    
                     list_index_mass_X.append(cX)
-                    list_index_mass_Y.append(cY)            
-                   
+                    list_index_mass_Y.append(cY)    
 
                     n_init += 1
                    
@@ -1702,20 +1659,18 @@ class MainWindow(QMainWindow):
                 model_point_maxX = np.amax(cont_size_filtered[index_of_model], axis=0)[0][0]
                 model_point_minX = np.amin(cont_size_filtered[index_of_model], axis=0)[0][0]
                
-                
-                
+
                 for v in list_index:
                     if v != index_of_model and list_index_mass_X[v] < (model_point_minX + (self.model_lenght * 1.1)) \
                     and list_index_mass_X[v] > int(model_point_maxX * 0.9) \
                     and list_index_mass_Y[v] > (list_index_mass_Y[index_of_model] - (self.model_height/3)) \
                     and list_index_mass_Y[v] < (list_index_mass_Y[index_of_model] + (self.model_height/3)):                        
-                        list_final_values.append(cont_size_filtered[v])
-                       
+                        list_final_values.append(cont_size_filtered[v])          
+
 
                 
 
                 
-
                 self.array_for_angle_prepare = np.vstack(list_final_values)
 
             
@@ -1732,9 +1687,6 @@ class MainWindow(QMainWindow):
                 
                 self.final_array = self.array_for_angle_prepare.reshape(self.array_for_angle_prepare.shape[0], 1, self.array_for_angle_prepare.shape[1])
                 
-             
-                
-                self.min_for_speed = np.amin(self.final_array, axis=0)[0][0]
              
 
                 final_list = []
@@ -1770,7 +1722,8 @@ class MainWindow(QMainWindow):
 
 
                 self.heat_x, self.heat_y = list_index_mass_X[index_of_model], list_index_mass_Y[index_of_model]
-                
+                #print('self.heat_x')
+                #print(self.heat_x)
 
 
             else: # does not have model but has c_index
@@ -2477,10 +2430,6 @@ class MainWindow(QMainWindow):
             self.edit_fish_specie.show()
             self.label_fish_id.show()
             self.edit_fish_id.show()
-
-
-            self.study_size.show()
-            self.study_size_insert.show()
             #########################
             self.button_previous_step.hide()
             self.button_select_back.show()
@@ -2509,6 +2458,14 @@ class MainWindow(QMainWindow):
             
             self.combo_play.show()
 
+
+            
+
+            
+
+            
+
+
             #self.fish_pre_model = np.array([1])
             #self.fish_model = np.array([1])
             self.setFixedSize(660,600)
@@ -2522,44 +2479,24 @@ class MainWindow(QMainWindow):
                      
 
         if self.step == 0:
-
             if (self.croped_background == 0 or self.croped_study_area == 0):
-                QMessageBox.about(self, "Alert", "You need to select Study Area and Fish Position to advance to next step")
-                go_ahead_back=0
+                QMessageBox.about(self, "Alert", "You need to select Study Area and Fish Position to advance to next step")   
             else:
-                go_ahead_back=1           
 
-
-            if self.study_size_insert.text() == '' or float(self.study_size_insert.text()) < 0.1:
-                buttonReply = QMessageBox.question(self, 'PyQt5 message', "If you do not insert the study area lenght(cm), we won´t be able to estimate fish lenght and make some calculations based on fish´s lenght. Anyway, you can calculate manually later, using real fish´s lenght. Continue anyway?", QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
-                if buttonReply == QMessageBox.Yes:
-                    print('Yes clicked.')
-                    go_ahead_size=1
-                else:
-                    print('No clicked.')
-                    go_ahead_size=0
-            else:
-                go_ahead_size=1
-
-
-
-
-
-            if go_ahead_back == 1 and go_ahead_size == 1:
-
-
-
-                self.step = 1
+                
+                ############# mask step (step 1)
+                self.step = 1 
                 print('actual step = ' + str(self.step))
-                self.setFixedSize(660,640)           
+                self.setFixedSize(660,640)
+
+
+                
                 self.image_back.show()
                 self.extract_back_message.show()
                 if self.back_sub_type == 'image':
                     self.button_send_background.show()
 
 
-                self.study_size.hide()
-                self.study_size_insert.hide()
                 self.label_fish_specie.hide()
                 self.label_fish_id.hide()
                 self.edit_fish_id.hide()
@@ -2618,9 +2555,8 @@ class MainWindow(QMainWindow):
                 self.button_select_back.hide()
                 self.button_select.hide()
                 self.button_select_model.hide()
-                self.button_unselect_model.hide()
+                self.button_unselect_model.hide() 
 
-                
 
                 self.graphWidget.show()  
 
@@ -2826,9 +2762,7 @@ class MainWindow(QMainWindow):
 
         
     def start_countig(self):
-
         self.heat_map_integral = []
-        self.final_list_for_speed = []
         self.setFixedSize(660,460)
         #self.bar.setGeometry(0, 0, self.frame_count, 30)
         self.bar.setMaximum(self.number_files-1) 
@@ -2858,9 +2792,6 @@ class MainWindow(QMainWindow):
             self.update_plot_data()
 
             self.heat_map_integral.append([self.heat_x, self.heat_y])
-            self.final_list_for_speed.append(self.min_for_speed)
-
-
 
 
             #self.array_for_angle_final = self.array_for_angle[:,0]
@@ -3134,8 +3065,7 @@ class MainWindow(QMainWindow):
         self.resulting_label.deleteLater()
         self.button_build_report.deleteLater()
         self.button_save.deleteLater()
-        
-        self.setFixedSize(660,300)
+        self.setFixedSize(660,200)
 
         self.build_report_step2()
 
@@ -3157,7 +3087,7 @@ class MainWindow(QMainWindow):
             self.label_generate_report.show()
 
 
-        self.setFixedSize(660,300)
+        self.setFixedSize(660,250)
 
         self.label.deleteLater()
         self.button_open.deleteLater()
@@ -3385,7 +3315,6 @@ class MainWindow(QMainWindow):
         
 
         dataset = self.no_zeros
-        self.dataset_for_speed = self.no_zeros
         #plt.title("Caudal beating rate") #The title of our plot
         #plt.plot(dataset.angle) #Draw the plot object
 
@@ -3906,7 +3835,7 @@ class MainWindow(QMainWindow):
 
     def velocity_calculation(self):
         #total_time = self.duration*self.picos        
-        self.corrector = 1/self.fps
+        corrector = 1/self.fps
         col_one_list2 = self.no_zeros['angle'].tolist()
 
         
@@ -3914,7 +3843,7 @@ class MainWindow(QMainWindow):
         #print(lista_finalz)
         #lista_finalz =  [abs(ele) for ele in lista_finalz]
         #print(lista_finalz)
-        lista_finalz = [ round((x/self.corrector/1000),3) for x in lista_finalz]
+        lista_finalz = [ round((x/corrector/1000),3) for x in lista_finalz]
         #print(lista_finalz)
         self.my_array_fin = np.array(lista_finalz)
         #dfc = self.no_zeros.iloc[1:]
@@ -3941,14 +3870,13 @@ class MainWindow(QMainWindow):
         self.kernel_density()
         
 
-    def kernel_density(self):  
-          
+    def kernel_density(self):      
         
-        kernel_plot = sns.jointplot(x=self.my_array_fin, y=self.no_zeros['angle'][1:], kind="kde", cmap=cm.jet, cbar = False, height=6)            
+        kernel_plot = sns.jointplot(x=self.my_array_fin, y=self.no_zeros['angle'][1:], kind="kde", cmap="jet", cbar = False, height=6)            
         kernel_plot.plot_joint(plt.scatter, c="black", s=30, linewidth=1, marker=".")           
-        kernel_plot.set_axis_labels("degrees/milisecond", "Angle[degrees]")      
+        kernel_plot.set_axis_labels("degrees/ms", "Angle")      
         kernel_plot.fig.subplots_adjust(top=0.9, bottom = 0.2)
-        kernel_plot.fig.suptitle("Tail velocity(x) X tail angle(y)", fontsize=12, wrap=True)
+        kernel_plot.fig.suptitle("Kernel-density of the tail angle (degrees X tail velocity)", fontsize=12, wrap=True)
                 
         self.figure = kernel_plot.fig 
         
@@ -3963,84 +3891,29 @@ class MainWindow(QMainWindow):
         self.aceleration()
 
     def aceleration(self):
-        #lista_acel = []
-        #for n in self.final_list_for_speed:                      
-            #x_center = n[0]
-            #lista_acel.append(x_center)
+        lista_acel = []
+        for n in self.heat_map_integral:                      
+            x_center = n[0]
+            lista_acel.append(x_center)
             
       
-        self.soma_value = []
-        index_soma_value = []
-        self.angles_for_speed = []
-        self.soma_value_fish_size_corrected = []
-        self.caudal_velocity_versus_acceleration = []
+        soma_value = []      
+        x=0
+        for i in range (0, len(lista_acel)):
+            if x > 0 and lista_acel[x] > lista_acel[x-1]:                
+                diff_value = lista_acel[x] - lista_acel[x-1]
+                soma_value.append(diff_value)
+            x=x+1    
         
-        self.study_area_size_pixels = self.end_x_study - self.start_x_study 
-        if self.study_size_insert.text() != '' and float(self.study_size_insert.text()) > 0:
-            self.has_fish_size = 1
-            self.one_pixel_value_cm = float(self.study_size_insert.text())/self.study_area_size_pixels
-            self.fish_size = round(self.model_lenght*self.one_pixel_value_cm, 2)        
-            
-              
-            
-        else:
-            self.has_fish_size = 0
-            self.fish_size = 'not detected'   
-
-              
-        x=0       
-        for i in range (0, len(self.final_list_for_speed)):
-            if (x > 0) and (self.final_list_for_speed[x] < self.final_list_for_speed[x-1]) and (self.final_list_for_speed[x] > 0):                
-                diff_value = (self.final_list_for_speed[x-1] - self.final_list_for_speed[x])/self.corrector                
-                
-                if self.has_fish_size == 1:
-                    self.soma_value_fish_size_corrected.append(round(diff_value*self.one_pixel_value_cm, 2))
-                else:
-                    self.soma_value.append(diff_value)
-
-
-                self.angles_for_speed.append(self.dataset_for_speed.angle[i])
-                self.caudal_velocity_versus_acceleration.append(self.my_array_fin[i])
-            x=x+1
-
-
-
         
-
-        if len(self.soma_value) > 0 or len(self.soma_value_fish_size_corrected) > 0:
-            if self.has_fish_size == 1:                          
-                self.final_value_mean = round((mean(self.soma_value_fish_size_corrected)), 2)
-                self.final_value_mean_accumulated = round((sum(self.soma_value_fish_size_corrected)), 2)
-                self.acceleration_message = QLabel("The calculated fish Lenght is " + str(self.fish_size) + \
-                    " cm\nThe average absolute fish acceleration rate is: " + str(self.final_value_mean) + \
-                    " cm/s²\nThe average relative fish acceleration rate is: " + str(round(self.final_value_mean/self.fish_size, 2)) + \
-                    " bl/s²\nThe accumulated absolute fish acceleration rate is: " + str(self.final_value_mean_accumulated) + \
-                    " cm/s²\nThe accumulated relative fish acceleration rate is: " + str(round(self.final_value_mean_accumulated/self.fish_size, 2)) + \
-                    " bl/s²\nObserve that acceleration is no the same as fish velocity" , self)
-
-            else:
-                self.final_value_mean = round(mean(self.soma_value), 2)
-                self.final_value_mean_accumulated = round(sum(self.soma_value), 2)
-                self.fish_size = "not detected"
-                self.acceleration_message = QLabel("The calculated fish Lenght is: " + str(self.fish_size) + \
-                    " \nThe average absolute fish acceleration rate is: " + str(self.final_value_mean) + \
-                    " pixels/s\nThe accumulated absolute fish acceleration rate is: " + str(self.final_value_mean_accumulated) + \
-                    " pixels/s", self)
-
-                
-                
-                
-
-        else:           
-            
-            self.acceleration_message = QLabel("Not acceleration data to show\nThe fish size is: " + str(self.fish_size), self)
+        if len(soma_value) > 0:
+            self.final_value = round(mean(soma_value), 2)
           
-        
-        
 
 
+        self.acceleration_message = QLabel("The fish Acceleration rate is: " + str(self.final_value) + " pixels/frame", self)
         self.acceleration_message.move(100, 100)
-        self.acceleration_message.setFont(QFont('Arial', 10))          
+        self.acceleration_message.setFont(QFont('Arial', 16))          
         self.acceleration_message.show()       
 
         self.tab6 = QWidget()
@@ -4049,99 +3922,11 @@ class MainWindow(QMainWindow):
         self.tab6.setLayout(self.tab6.layout)   
 
 
-        
-        self.kernel_angulo_acceleration()
-
-        
-
-
-
-    def kernel_angulo_acceleration(self):
-
-        if self.has_fish_size == 1:
-            x_values = self.soma_value_fish_size_corrected
-            text = 'body lengths/second²'
-        else:
-            x_values = self.soma_value
-            text = 'pixels/s²'        
-
-        y_values = self.angles_for_speed
-
-
-        kernel_plot_angulo = sns.jointplot(x=x_values, y=y_values, kind="kde", cmap=cm.jet, cbar = False, height=5)            
-        kernel_plot_angulo.plot_joint(plt.scatter, c="black", s=30, linewidth=1, marker=".")           
-        kernel_plot_angulo.set_axis_labels(text, "Angle [degrees]")      
-        kernel_plot_angulo.fig.subplots_adjust(top=0.9, bottom = 0.2)
-        kernel_plot_angulo.fig.suptitle("Fish acceleration(x) X tail angle(y)", fontsize=12, wrap=True)
-                
-        self.figure = kernel_plot_angulo.fig 
-        
-
-        self.canvas_kernel_density_angle = FigureCanvas(self.figure)
-
-        self.tab7 = QWidget()
-        self.tab7.layout = QVBoxLayout(self)        
-        self.tab7.layout.addWidget(self.canvas_kernel_density_angle)      
-        self.tab7.setLayout(self.tab7.layout)
-
-
-        self.kernel_velocity_acceleration()
-
-
-
-                 
-
-
-    def kernel_velocity_acceleration(self):
-
-        if self.has_fish_size == 1:
-            x_values = self.soma_value_fish_size_corrected
-            text = 'body lengths/second²'
-        else:
-            x_values = self.soma_value
-            text = 'pixels/second²'        
-
-        y_values = self.caudal_velocity_versus_acceleration
-
-
-        kernel_plot_veloc = sns.jointplot(x=x_values, y=y_values, kind="kde", cmap=cm.jet, cbar = False, height=5)            
-        kernel_plot_veloc.plot_joint(plt.scatter, c="black", s=30, linewidth=1, marker=".")
-
-        kernel_plot_veloc.set_axis_labels(text, "Caudal velocity [degrees/milisecond]")      
-        kernel_plot_veloc.fig.subplots_adjust(top=0.9, bottom = 0.2, left = 0.15)
-        kernel_plot_veloc.fig.suptitle("Fish acceleration(x) X Caudal velocity(y)", fontsize=12, wrap=True)
-                
-        self.figure = kernel_plot_veloc.fig 
-        
-
-        self.canvas_kernel_density_velocity = FigureCanvas(self.figure)
-
-        self.tab8 = QWidget()
-        self.tab8.layout = QVBoxLayout(self)        
-        self.tab8.layout.addWidget(self.canvas_kernel_density_velocity)      
-        self.tab8.setLayout(self.tab8.layout)
-
-
-
-        self.final_result()
-        
-        
-
-
-    def final_result(self):
-        self.result_final = QLabel("Baseando-se nos resultados do estilo natatório,\no peixe está SAUDÁVEL", self)
-        self.result_final.move(100, 100)
-        self.result_final.setFont(QFont('Arial', 14))          
-        self.result_final.show()       
-
-        self.tab9 = QWidget()
-        self.tab9.layout = QVBoxLayout(self)        
-        self.tab9.layout.addWidget(self.result_final)      
-        self.tab9.setLayout(self.tab9.layout)
-
-
+        ############### insert all tabs in layout ###################
 
         self.insert_tabs_in_layout()
+
+    
 
 
     def insert_tabs_in_layout(self):
@@ -4150,9 +3935,8 @@ class MainWindow(QMainWindow):
         self.canvas_heat.draw()
         self.canvas_histo_raw.draw()
         self.canvas_histo_velocity.draw()
-        self.canvas_kernel_density.draw()        
-        self.canvas_kernel_density_angle.draw()
-        self.canvas_kernel_density_velocity.draw()
+        self.canvas_kernel_density.draw()
+        #self.acceleration_message.draw()
 
         # Initialize tab screen
         self.tabs = QTabWidget()
@@ -4162,15 +3946,12 @@ class MainWindow(QMainWindow):
         self.tabs.resize(300,200)
 
         # Add tabs
-        self.tabs.addTab(self.tab1,"Caudal Peaks")
-        self.tabs.addTab(self.tab2,"Fish position Heat Map")
-        self.tabs.addTab(self.tab3,"Caudal Angle Histogram")
-        self.tabs.addTab(self.tab4,"Caudal Velolicty Histogram")
-        self.tabs.addTab(self.tab5,"Tail angle X Tail Velocity")
-        self.tabs.addTab(self.tab6,"Fish acceleration")
-        self.tabs.addTab(self.tab7,"Fish acceleration X caudal angle")
-        self.tabs.addTab(self.tab8,"Fish acceleration X caudal velocity")
-        self.tabs.addTab(self.tab9,"Resulting")        
+        self.tabs.addTab(self.tab1,"Peaks")
+        self.tabs.addTab(self.tab2,"Heat Map")
+        self.tabs.addTab(self.tab3,"Angle Histogram")
+        self.tabs.addTab(self.tab4,"Velocity Histogram")
+        self.tabs.addTab(self.tab5,"Kernel Density")
+        self.tabs.addTab(self.tab6,"Acceleration")   
   
 
          
